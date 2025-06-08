@@ -33,6 +33,7 @@ const Search = () => {
       if (searchQuery.trim()) {
 
         await moviesRefetch();
+
         if(movies?.lenght > 0 && movies?.[0])
           await updateSearchCount(searchQuery, movies[0]); // Update search count for the first movie in results
 
