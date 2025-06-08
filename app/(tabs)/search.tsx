@@ -4,28 +4,50 @@ import { icons } from '@/constants/icons'
 import { images } from '@/constants/images'
 import { fetchMovies } from "@/services/api"
 import useFetch from '@/services/useFetch'
-import { useRouter } from 'expo-router'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
 
 
 const Search = () => {
 
-   const router = useRouter();
+  const [searchQuery, setsearchQuery] = useState('');
 
   const { data: movies,
           loading: moviesLoading,
           error: moviesError,
+          refetch: moviesRefetch,
+          reset,
 
   } = useFetch(() => fetchMovies({
 
-      query: ''
+      query: searchQuery
 
-    }))
+    }), false  ); // Set autoFetch to false to control when to fetch
+
+  // Refetch movies when searchQuery changes
+  useEffect(() => {
+
+    const timoutId = setTimeout( async () => {
+
+      if (searchQuery.trim()) {
+
+        await moviesRefetch();
+
+      } else {
+
+        reset(); // Reset if searchQuery is empty
+      }
+    }, 500); // Debounce for 500ms
+
+    return () => clearTimeout(timoutId); // Cleanup timeout on unmount or when searchQuery changes
+
+  }, [searchQuery]);
+
 
   return (
     <View className='flex-1 bg-primary'>
       <Image source={images.bg} className='flex-1 absolute w-full z-0' resizeMode='cover' />
+
       <FlatList
         data={movies}
         renderItem={({ item }) => <MovieCard {...item} /> }
@@ -35,7 +57,7 @@ const Search = () => {
         columnWrapperStyle={{
           justifyContent: 'center',
           gap: 16,
-          marginVertical: 10
+          marginVertical: 16
         }}
         contentContainerStyle={{
           paddingBottom: 100,  // Add padding to the bottom
@@ -48,11 +70,16 @@ const Search = () => {
             </View>
 
             <View className='my-5'>
-              <SearchBar placeholder='Search Movies...' />
+              <SearchBar
+                placeholder='Search Movies...'
+                value={searchQuery}
+                onChangeText={(text: string) => setsearchQuery(text)}
+
+              />
             </View>
 
             {moviesLoading && (
-              <ActivityIndicator size="large" color="0000ff" className='my-3'/>
+              <ActivityIndicator size="large" color="#0000ff" className='my-3'/>
             )}
 
             {moviesError && (
@@ -63,16 +90,32 @@ const Search = () => {
 
             )}
 
-            {!moviesLoading && !moviesError && "SEARCH TERM".trim() && movies?.length > 0 && (
+            {!moviesLoading && !moviesError && searchQuery.trim() && movies?.length > 0 && (
 
               <Text className='text-xl text-white font-bold'>
                 Search Results For {" "}
-                <Text className='text-accent'>SEARCH TERM</Text>
+                <Text className='text-accent'>{searchQuery}</Text>
               </Text>
 
             )}
 
           </>
+        }
+
+        ListEmptyComponent={
+
+          !moviesLoading && !moviesError ? (
+
+            <View className='mt-10 px-5'>
+
+              <Text className='text-center text-gray-500'>
+                {searchQuery.trim() ?
+                  "No results found " : 'Search for a movie'}
+              </Text>
+
+            </View>
+
+          ) : null
 
         }
 
