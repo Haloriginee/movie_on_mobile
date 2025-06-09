@@ -34,7 +34,7 @@ const Search = () => {
 
         await moviesRefetch();
 
-        if(movies?.lenght > 0)
+        if(movies?.lenght > 0 && movies?.[0]) // Check if movies array is not empty and has at least one movie
           await updateSearchCount(searchQuery, movies[0]); // Update search count for the first movie in results
 
       } else {

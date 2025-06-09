@@ -63,13 +63,13 @@ const _layout = () => {
       <Tabs.Screen
         name='index'
         options={{
-          title:"Index",
+          title: "index",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <>
               <TabIcon
                 focused={focused}
-                icon={icons.home}
+                icon={icons.search}
                 title="Home"
               />
             </>
