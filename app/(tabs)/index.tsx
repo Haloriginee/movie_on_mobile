@@ -60,6 +60,7 @@ const Index = () => {
           <Text>Error: {moviesError?.message || trendingError?.message}</Text>
         ) : (
           <View className="flex-1 mt-5">
+
             <SearchBar
               onPress={() => {
                 router.push("/search");
@@ -67,9 +68,35 @@ const Index = () => {
               placeholder="Search for a movie"
             />
 
+              {trendingMovies && (
 
+                <View className="mt-10">
+                  <Text className="text-lg text-white font-bold mb-3">
+                    Trending Movies
+                  </Text>
+                </View>
+
+              )}
 
             <>
+
+              <FlatList className="mb-4 mt-3"
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={() => (
+                  <View className="w-4" />
+                )}
+                data={trendingMovies}
+                renderItem={({ item, index})=>(
+
+                  <Text className="text-white text-sm">
+                    {item.title}
+                  </Text>
+
+                )}
+                keyExtractor={(item) => item.movie_id.toString()}
+              />
+
               <Text className="text-lg text-white font-bold mt-5 mb-3">
                 Latest Movies
               </Text>
