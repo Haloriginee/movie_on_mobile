@@ -18,6 +18,7 @@ import { images } from "@/constants/images";
 
 import MovieCard from "@/components/MovieCard";
 import SearchBar from "@/components/SearchBar";
+import TrendingCard from "@/components/TrendingCard";
 import React from "react";
 
 const Index = () => {
@@ -89,9 +90,10 @@ const Index = () => {
                 data={trendingMovies}
                 renderItem={({ item, index})=>(
 
-                  <Text className="text-white text-sm">
-                    {item.title}
-                  </Text>
+                  <TrendingCard
+                    movie={item}
+                    index={index}
+                  />
 
                 )}
                 keyExtractor={(item) => item.movie_id.toString()}
