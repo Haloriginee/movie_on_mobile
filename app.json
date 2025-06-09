@@ -20,7 +20,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/logo.png"
     },
     "plugins": [
@@ -37,6 +37,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6c4b824e-ffe3-4e9e-993d-55065a083c72"
+      }
     }
   }
 }
